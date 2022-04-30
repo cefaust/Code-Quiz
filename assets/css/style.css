@@ -1,0 +1,116 @@
+* {
+    background-color: antiquewhite;
+    font-family: Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-weight: 600;
+
+}
+
+body {
+    height: vh 100;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 50px;
+}
+
+
+
+header .high-score {
+    flex: 1 75%;
+    align-self: flex-end;
+    
+    
+}
+
+header .high-score button {
+    height: 50px;
+    border: 2px solid blue;
+    color: white;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: blue;
+}
+
+header .time-card {
+    flex: 25%;
+    align-items: baseline;
+}
+
+
+
+ .time-card {
+    display: flex;
+    align-self: flex-end;
+}
+
+header .time-header {
+    flex: 40%;
+    text-align: end;
+}
+header .timer-count {
+    flex: 20%;
+    text-align: center;
+    font-size: 1.5rem;
+    color: rgb(0, 51, 255);
+}
+
+header .time-text {
+    flex: 40%;
+}
+
+
+main section {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    vh: 100;
+    
+}
+
+main h1 {
+    flex: 1 33%;
+    font-size: 2em;
+    
+}
+
+
+main section .game-answer { 
+    flex: 1 33%;
+    font-size: 1.5em;
+    height: 300px;
+    /* width: 100vw; */
+}
+
+
+
+main section .start-button {
+    flex: 1 33%;
+    height: 100px;
+    width: 100px;
+    border-radius: 12px;
+    background-color: blue;
+    color: white;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.hide {
+    display: none;
+}
+
+div button {
+    background-color: blue;
+    color: white;
+    height: 50px;
+    width: 300px;
+    border-radius: 12px;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    /* padding: 5px; */
+}

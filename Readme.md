@@ -1,6 +1,6 @@
 # Code Quiz
 
-## 
+## For this project i was tasked with creating a Code Quiz game.  This code quiz would start when the user presses start and presents the user a series of multiple choice questions. At the end the user will be able to see their score and add their initials to save to a high score list.
 
 ### Things that I included in this Code Quiz
 

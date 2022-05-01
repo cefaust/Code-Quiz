@@ -3,8 +3,13 @@ var timerEl = document.querySelector(".timer-count");
 var highScoreEl = document.querySelector(".high-score");
 var quizQuestionsEl = document.querySelector(".quiz-questions");
 var answerEl = document.querySelector(".game-answer");
+var validationEl = document.querySelector(".validation");
+var listHighScoreEl = document.querySelector(".score-list");
 var secondsLeft = 30;
 var isTimerRunning = false;
+var pointsGained = 0;
+var nextQuestion;
+var leaderboard = [];
 var questions = [
   "Javascript is an _______ language?",
   "Which of the following methods is used to access HTML elements using Javascript?",
@@ -16,9 +21,8 @@ var questions = [
 ];
 
 // an array of answers
-  // each answer
-    // if it's the correct answer
-
+// each answer
+// if it's the correct answer
 
 var answers = [
   [
@@ -109,7 +113,7 @@ var answers = [
     {
       text: "$ $",
       isCorrect: false,
-    }
+    },
   ],
   [
     {
@@ -127,7 +131,7 @@ var answers = [
     {
       text: "None of the Above",
       isCorrect: false,
-    }
+    },
   ],
   [
     {
@@ -145,44 +149,36 @@ var answers = [
     {
       text: "All of the above",
       isCorrect: true,
-    }
+    },
   ],
 ];
 
-
-// when pressing start button timer will set to 30 seconds and start countdown
-startButtonEl.addEventListener("click", function() {
+startButtonEl.addEventListener("click", function () {
   function setTime() {
     if (!isTimerRunning) {
-      isTimerRunning = true;
-      secondsLeft = 30;
-      timerEl.textContent = secondsLeft;
-      timerInterval = setInterval(function() {
-        secondsLeft--;
-        timerEl.textContent = secondsLeft;
-
+      startTimer();
+      timerInterval = setInterval(function () {
+        updateTimeRemaining(secondsLeft - 1);
         if (secondsLeft === 0) {
-          clearInterval(timerInterval);
-          isTimerRunning = false;
+          stopTimer();
         }
       }, 1000);
     }
   }
   setTime();
   startButtonEl.classList.add("hide");
-  
-  //todo on pressing start code quiz will change to random question 1
-  let randomQuestion = Math.floor(Math.random() * questions.length)
-  var question = questions[randomQuestion];
 
+  nextQuestion();
+});
+
+function nextQuestion() {
+  let randomQuestion = Math.floor(Math.random() * questions.length);
+  var question = questions[randomQuestion];
 
   quizQuestionsEl.textContent = question;
 
-  //todo on pressing start p tag will change to the 4 answers for question 1
-
   createAnswerEl(randomQuestion);
-  //todo on pressing start start button will go away
-});
+}
 
 function createAnswerEl(randomQuestionIndex) {
   answerEl.textContent = "";
@@ -190,19 +186,30 @@ function createAnswerEl(randomQuestionIndex) {
     let divEl = document.createElement("div");
     let btnEl = document.createElement("button");
     btnEl.textContent = answers[randomQuestionIndex][i].text;
-    btnEl.addEventListener("click", function() {
+    btnEl.addEventListener("click", function () {
       if (answers[randomQuestionIndex][i].isCorrect) {
-          alert("correct")
-          //add "correct" to where start button was.
-          // add points in background
-          // load new question
+        console.log("correct");
 
+        validationEl.textContent = "Correct";
+        pointsGained = pointsGained + 5;
+
+        nextQuestion();
       } else {
-        //todo incorrect answer selection
-        // subtract time 
+        validationEl.textContent = "Wrong";
+        nextQuestion();
+
+        if (secondsLeft <= 5) {
+          stopTimer();
+        } else {
+          updateTimeRemaining(secondsLeft - 5);
+        }
       }
       //clear "correct|wrong "
+      setTimeout(function () {
+        validationEl.textContent = "";
+      }, 1000);
 
+      // game over stops questions and post score and ask for initials
     });
 
     // answers[randomQuestionIndex][i].isCorrect
@@ -210,5 +217,64 @@ function createAnswerEl(randomQuestionIndex) {
     answerEl.appendChild(divEl);
   }
 
-  // li.appendChild(document.createTextNode("answers"));
 }
+
+function updateTimeRemaining(_secondsLeft) {
+  secondsLeft = _secondsLeft;
+  timerEl.textContent = _secondsLeft;
+}
+
+function startTimer() {
+  isTimerRunning = true;
+  updateTimeRemaining(30);
+}
+
+function stopTimer() {
+  isTimerRunning = false;
+  clearInterval(timerInterval);
+  updateTimeRemaining(0);
+  answerEl.textContent = "High Scores";
+  quizQuestionsEl.textContent = "Game Over";
+  validationEl.textContent = "";
+
+
+  setTimeout(function () {
+    var initials = prompt(
+      `Your score was ${pointsGained}. Enter you initials to save your score`
+    );
+    let entry = {
+      name: initials,
+      score: pointsGained,
+    };
+    leaderboard.push(entry);
+    saveLeaderboard()
+    console.log(leaderboard);
+    showLeaderBoard();
+    
+  }, 30); 
+  
+} 
+function showLeaderBoard() {
+  let leaderOlEl = document.createElement("ol");
+  for (let i = 0; i < leaderboard.length; i++) {
+    let leaderLiEl = document.createElement("li");
+    leaderLiEl.textContent = leaderboard[i].name + leaderboard[i].score;
+    leaderOlEl.appendChild(leaderLiEl);
+    
+  }
+  listHighScoreEl.appendChild(leaderOlEl);
+} 
+
+function saveLeaderboard() {
+  localStorage.setItem("5_leaderboard", JSON.stringify(leaderboard));
+}
+
+function getLeaderboard() {
+  let fromLocalStorage = localStorage.getItem("5_leaderboard")
+  if (fromLocalStorage === null) {
+    leaderboard = [];
+  } else {
+    leaderboard = JSON.parse(fromLocalStorage);
+  }
+} 
+getLeaderboard();
